@@ -14,7 +14,7 @@ Authors:
 [Daniel Cremers](https://cvg.cit.tum.de/members/cremers)
 
 <p align="center">
-  <img src="./figures/teaser.png" alt="EquiFusion Teaser" width="600"/>
+  <img src="./figures/teaser_animated_social.gif" alt="EquiFusion Teaser" width="600"/>
 </p>
 
 > ### 🚧 Code coming soon
@@ -64,20 +64,11 @@ This code is released under the **BSD 2-Clause License**. See [LICENSE](LICENSE)
 If you find this work useful, please cite:
 
 ```bibtex
-@article{curreli2026equifusion,
-  title   = {EquiFusion: Kinematics-Agnostic Human Motion Prediction via Equivariant Latent Diffusion},
-  author  = {Curreli, Cecilia and Hofherr, Florian and Muhle, Dominik and Saroha, Abhishek and Marin, Riccardo and Cremers, Daniel},
-  journal = {arXiv preprint arXiv:2607.10984},
-  year    = {2026}
-}
-```
-
-<!-- Once the ECCV 2026 proceedings are out, replace the entry above with the official one:
-
 @inproceedings{curreli2026equifusion,
   title     = {EquiFusion: Kinematics-Agnostic Human Motion Prediction via Equivariant Latent Diffusion},
   author    = {Curreli, Cecilia and Hofherr, Florian and Muhle, Dominik and Saroha, Abhishek and Marin, Riccardo and Cremers, Daniel},
-  booktitle = {European Conference on Computer Vision (ECCV)},
+  booktitle = {European Conference on Computer Vision},
+  organization = {Springer},
   year      = {2026}
 }
--->
+```
