@@ -1,0 +1,2 @@
+task_name: hmp            # human motion prediction
+if_consider_hip: False    # predict the pose relative to the root (no global trajectory)

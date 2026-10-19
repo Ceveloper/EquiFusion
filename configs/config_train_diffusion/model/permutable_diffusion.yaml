@@ -1,0 +1,47 @@
+# EquiFusion latent diffusion (values of the released models)
+pretrained_autoencoder_path: ???   # path to the autoencoder checkpoint (e.g. .../autoencoder/<run>/checkpoints/checkpoint_800.pt)
+
+diffusion_type: PermutableGaussianDiffusion
+diffusion_timesteps: 10
+diffusion_objective: pred_x0
+beta_schedule: cosine
+diffusion_activation: identity
+diffusion_conditioning: True       # conditioned on the latents of the observed motion
+loss_reduction_type: l1
+diffusion_arch:                    # DenoisingGraphTransformer
+  depth: 4
+  dim_head: 32
+  num_heads: 8
+  add_bias_kv: True
+  norm_type: none
+  self_condition: False
+train_pick_best_sample_among_k: 50 # k-relaxation: loss of the best of k denoised samples
+
+# Training
+lr: 1.e-3
+weight_decay: 0.
+use_lr_scheduler: True
+lr_scheduler_kwargs:
+  lr_scheduler_type: ExponentialLRSchedulerWarmup
+  warmup_duration: 20
+  if_lr_scheduler_ramp_up: False
+  ramp_up_init_lr: 0.0
+  update_every: 2
+  min_lr: 1.e-4
+  gamma_decay: 0.99
+if_use_ema: True
+step_start_ema: 100
+ema_power: ${eval:'2/3'}
+ema_update_every: 10
+ema_min_value: 0.0
+num_epochs: 375                    # released models: epoch 375 (the learning-rate schedule does not depend on num_epochs)
+num_iter_perepoch: null            # null: one epoch is a full pass over the training data
+batch_size: 64
+batch_size_eval: 128
+num_workers: 4
+seed: 63485
+
+# Validation
+if_run_validation: False
+eval_frequency: 25                 # also the frequency of the saved checkpoints
+num_prob_samples: 50

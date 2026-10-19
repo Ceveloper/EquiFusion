@@ -1,0 +1,8 @@
+# Zero-velocity baseline: repeats the last observed pose.
+# On H36M, the baseline results of the paper are computed at the native 50 fps (25 observed -> 100 predicted frames),
+# not with the 60-fps windows of the released models:
+#   python eval.py method_specs=zerovelocity_alg_baseline dataset=h36m if_eval_from60_at50fps=False stats_mode=deterministic
+motion_repr_type: "SkeletonCenterPose" # SkeletonRescalePose
+method_name: ZeroVelocityBaseline
+baseline_out_path: ./output/baselines
+max_num_nodes: ${eval:"int(${dataset.num_joints})-int(not ${task.if_consider_hip})"}

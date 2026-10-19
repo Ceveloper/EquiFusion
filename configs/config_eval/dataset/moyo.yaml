@@ -1,0 +1,33 @@
+num_joints: 22 #included hip even if if_consider_hip=False
+fps: 60
+
+multimodal_threshold: 0.4
+dataset_type: MOYOZeroShotDataset
+dataset_name: moyo
+precomputed_folder: "${dataset_precomputed_path}/MOYO/${task.task_name}/"
+annotations_folder: "${dataset_annotation_path}/MOYO/${task.task_name}/"
+
+# data_loader_train:
+#     stride: 10
+#     augmentation: 5
+#     shuffle: True
+#     da_mirroring: 0.5
+#     da_rotations: 1.0
+#     drop_last: True
+#     if_load_mmgt: False
+
+# data_loader_train_eval:
+#     stride: 30
+#     augmentation: 0
+#     shuffle: False
+#     da_mirroring: 0.
+#     da_rotations: 0.
+#     drop_last: False
+#     if_load_mmgt: False
+
+data_loader_test:
+    shuffle: False
+    segments_path: "${dataset.annotations_folder}/segments_test_zero_shot.csv"
+    actions: "all"
+    drop_last: False
+    if_load_mmgt: ${eval:'True if "probabilistic" in "${stats_mode}" else False'}

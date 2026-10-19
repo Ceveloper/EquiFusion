@@ -1,0 +1,8 @@
+task_name: hmp            # human motion prediction
+if_consider_hip: False    # predict the pose relative to the root (no global trajectory)
+
+# Motion representation: SkeletonDirectionsPose (graph nodes are bones, released main models)
+# or SkeletonRescalePose (graph nodes are 3D joints)
+motion_repr_type: SkeletonDirectionsPose
+pose_box_size: 1.2        # in meters, used by SkeletonRescalePose
+seq_centering: -2

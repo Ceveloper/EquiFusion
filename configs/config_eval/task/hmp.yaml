@@ -1,0 +1,4 @@
+history_sec: 0.5 #${eval:'float(1) if ${task}=="motpred" else float(0.5)'}
+prediction_horizon_sec: 2 # ${eval:"float(4) if ${task}=='motpred' else float(2)"}
+task_name: "hmp"
+if_consider_hip: False

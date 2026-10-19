@@ -1,0 +1,32 @@
+# conda env create -f environment.yml && conda activate equifusion
+# Versions of the environment used to train and evaluate the released models (PyTorch 2.6, CUDA 12.6).
+name: equifusion
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pip
+  - numpy=2.1
+  - scipy=1.16
+  - pandas=2.3
+  - matplotlib=3.10
+  - pyyaml=6.0
+  - tqdm
+  - tabulate=0.9
+  - zarr=3.1            # storing predictions (eval.py if_store_output=True)
+  - tensorboard=2.20
+  - jupyter             # notebooks
+  - ipympl
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu126
+      - torch==2.6.0
+      - hydra-core==1.3.2
+      - omegaconf==2.3.0
+      - pytorch-ignite==0.5.2
+      - einops==0.8.1
+      - ema-pytorch==0.7.7
+      - safetensors==0.6.2
+      - huggingface_hub==0.34.4
+      # only needed to preprocess the raw datasets:
+      - cdflib                                                  # Human3.6M (.cdf files)
+      - git+https://github.com/nghorbani/human_body_prior@4c246d8  # AMASS / MoYo (SMPL-H body model)

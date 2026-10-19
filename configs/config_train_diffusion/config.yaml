@@ -1,0 +1,31 @@
+if_resume_training: false
+device: cuda
+load: false
+load_path: ''
+dataset_main_path: ./datasets
+dataset_annotation_path: ${dataset_main_path}/annotations
+dataset_precomputed_path: ${dataset_main_path}/processed
+
+dataset_folder_log_path: amass_nymeria
+output_log_path: ./output/hmp/${dataset_folder_log_path}/diffusion/${now:%B%d_%H-%M-%S}_${info}
+
+info: k${model.train_pick_best_sample_among_k}
+
+hydra:
+  run:
+    dir: ${output_log_path}
+  job:
+    chdir: False
+
+defaults:
+  - _self_
+  - model: permutable_diffusion
+  - task: hmp
+  - dataset_generalization: 
+    - h36m
+  # The training datasets, the motion representation and permutation_prob are taken from the config of the
+  # autoencoder (pretrained_autoencoder_path) unless overridden, e.g. '+dataset=[amass]' or '+permutation_prob=0.0'.
+  - override hydra/job_logging: disabled  
+
+if_measure_time: False
+if_forward_perm_to_graph: True   # the diffusion process receives the node permutation of each training sample

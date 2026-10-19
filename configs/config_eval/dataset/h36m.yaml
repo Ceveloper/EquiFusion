@@ -1,0 +1,56 @@
+num_joints: 17 #including the hip root joint
+fps: 50
+if_eval_from60_at50fps: True  # the released models use 60-fps windows: H36M is resampled from 50 to 60 fps
+dataset_type: H36MDataset
+dataset_name: "h36m"
+precomputed_folder: "${dataset_precomputed_path}/Human36M/${task.task_name}/"
+annotations_folder: "${dataset_annotation_path}/Human36M/${task.task_name}"
+multimodal_threshold: 0.5
+
+data_loader_train_eval:
+    stride: 10
+    augmentation: 5
+    shuffle: False
+    subjects: ["S1", "S5", "S6", "S7", "S8"] #, "S8"]
+    actions: "all"
+    da_mirroring: 0.
+    da_rotations: 0.
+    drop_last: False
+    if_load_mmgt: False
+    if_permute_keypoints: False
+
+data_loader_train:
+    stride: 10
+    augmentation: 5
+    shuffle: False
+    subjects: ["S1", "S5", "S6", "S7", "S8"] #, "S8"]
+    actions: "all"
+    da_mirroring: 0.
+    da_rotations: 0.
+    drop_last: False
+    if_load_mmgt: False
+    if_permute_keypoints: False
+
+data_loader_valid:
+    augmentation: 0
+    shuffle: False
+    subjects: ["S8"]
+    segments_path: "${dataset.annotations_folder}/segments_valid.csv"
+    actions: "all"
+    da_mirroring: 0.
+    da_rotations: 0.
+    drop_last: False
+    if_load_mmgt: ${eval:'True if "probabilistic" in "${stats_mode}" else False'}
+    if_permute_keypoints: False
+
+
+data_loader_test:
+    shuffle: False
+    augmentation: 0
+    segments_path: "${dataset.annotations_folder}/segments_test.csv"
+    subjects: ["S9", "S11"]
+    actions: "all"
+    da_mirroring: 0.
+    da_rotations: 0.
+    drop_last: False
+    if_load_mmgt: ${eval:'True if "probabilistic" in "${stats_mode}" else False'}

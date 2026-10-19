@@ -1,0 +1,64 @@
+num_joints: 22 #including the hip root joint
+fps: 60
+
+multimodal_threshold: 0.4
+dataset_type: AMASSDataset
+dataset_name: "amass"
+precomputed_folder: "${dataset_precomputed_path}/AMASS/${task.task_name}/"
+annotations_folder: "${dataset_annotation_path}/AMASS/${task.task_name}/"
+
+# Accordingly, the training set
+# contains the ACCAD, BMLhandball, BMLmovi, BMLrub,
+# CMU, EKUT, EyesJapanDataset, KIT, PosePrior, TCD-
+# Hands, and TotalCapture datasets, and the validation set
+# contains the HumanEva, HDM05, SFU, and MoSh datasets.
+# The remaining datasets are all part of the test set: DFaust,
+# DanceDB, GRAB, HUMAN4D, SOMA, SSM, and Transi-
+# tions.
+
+
+data_loader_train_eval:
+    stride: 60
+    augmentation: 0
+    shuffle: False
+    datasets: ['ACCAD', "BMLhandball", "BMLmovi", "BMLrub", 'EKUT', 'CMU', 'EyesJapanDataset', 'KIT', "PosePrior", 'TCDHands', 'TotalCapture'] # from paper
+    da_mirroring: 0.
+    da_rotations: 0.
+    drop_last: False
+    if_load_mmgt: False
+
+data_loader_train:
+    stride: 60
+    augmentation: 0
+    shuffle: False
+    datasets: ['ACCAD', "BMLhandball", "BMLmovi", "BMLrub", 'EKUT', 'CMU', 'EyesJapanDataset', 'KIT', "PosePrior", 'TCDHands', 'TotalCapture'] # from paper
+    da_mirroring: 0.
+    da_rotations: 0.
+    drop_last: False
+    if_load_mmgt: False
+
+data_loader_valid:
+    stride: 30
+    augmentation: 0
+    shuffle: False
+    datasets: ['HumanEva', 'HDM05', 'SFU', 'MoSh'] # from paper
+    file_idces: "all"
+    drop_last: False
+    if_load_mmgt: False
+    if_permute_keypoints: False
+
+
+
+data_loader_test:
+    shuffle: False
+    segments_path: ${dataset.annotations_folder}/segments_test.csv
+    datasets:  
+        - Transitions 
+        - SSM 
+        - DFaust 
+        - DanceDB 
+        - GRAB 
+        - HUMAN4D 
+        - SOMA 
+    drop_last: False
+    if_load_mmgt: ${eval:'True if "probabilistic" in "${stats_mode}" else False'}

@@ -1,0 +1,36 @@
+if_resume_training: false
+silent: false
+device: cuda
+load: false
+load_path: ''
+dataset_main_path: ./datasets
+dataset_annotation_path: ${dataset_main_path}/annotations
+dataset_precomputed_path: ${dataset_main_path}/processed
+exp_data_name: ${eval:"'_'.join(list(dict(${dataset}).keys()))"}
+output_log_path: ./output/${task.task_name}/${exp_data_name}/autoencoder/${now:%B%d_%H-%M-%S}_${info}
+
+
+defaults:
+  - _self_
+  - task: hmp
+  - dataset: 
+    - amass
+    - nymeria
+  - dataset_generalization: 
+    - h36m
+  - model: equivariant_autoencoder
+  - override hydra/job_logging: disabled    
+
+
+if_measure_time: False
+max_num_nodes: ${eval:"int(23)-int(not ${task.if_consider_hip})"}  # graph size; skeletons with fewer nodes are zero-padded
+
+
+info: ''
+hydra:
+  run:
+    dir: ${output_log_path}
+  job:
+    chdir: False
+
+

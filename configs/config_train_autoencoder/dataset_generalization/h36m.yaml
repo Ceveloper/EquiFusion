@@ -1,0 +1,44 @@
+h36m:
+    num_joints: 17 #included hip even if if_consider_hip=False. For h36m 17 or 25
+    fps: 50
+    if_train_interpfps: True
+    multimodal_threshold: 0.5
+    dataset_type: H36MDataset
+    dataset_name: h36m
+    precomputed_folder: "${dataset_precomputed_path}/Human36M/${task.task_name}/"
+    annotations_folder: "${dataset_annotation_path}/Human36M/${task.task_name}"
+
+    data_loader_train:
+        stride: 10
+        augmentation: 5
+        shuffle: True
+        subjects: ["S1", "S5", "S6", "S7"] #, "S8"]
+        actions: "all"
+        da_mirroring: 0.5
+        da_rotations: 1.0
+        drop_last: True
+        if_load_mmgt: False
+        if_permute_keypoints: True
+
+    data_loader_train_eval:
+        stride: 30
+        augmentation: 0
+        shuffle: False
+        subjects: ["S1", "S5", "S6", "S7", "S8"]
+        actions: "all"
+        da_mirroring: 0.
+        da_rotations: 0.
+        drop_last: False
+        if_load_mmgt: False
+        if_permute_keypoints: False
+
+    data_loader_valid:
+        stride: 30
+        augmentation: 0
+        shuffle: False
+        subjects: ["S8"]
+        segments_path: "${dataset_annotation_path}/Human36M/${task.task_name}/segments_valid.csv"
+        actions: "all"
+        drop_last: False
+        if_load_mmgt: False
+        if_permute_keypoints: False

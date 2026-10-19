@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/
+output/*
+output_verify/*
+datasets/raw
+datasets/processed
+trained_models/*
+*.pt
+*.safetensors
+dev/
+datasets/annotations/*/bodymodels
+demo/test_out/

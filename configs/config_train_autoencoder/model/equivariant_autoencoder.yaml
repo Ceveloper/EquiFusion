@@ -1,0 +1,57 @@
+# EquiFusion autoencoder (values of the released models)
+arch: EquivariantAutoEncoder
+latent_size: 96               # per-node latent dimension
+encoder_hidden_size: 128
+output_size: 3
+loss_pose_type: l1            # reconstruction loss
+transformer_arch_enc:
+  num_heads: 4
+  depth: 1
+  norm_layer: identity
+transformer_arch_dec:
+  num_heads: 4
+  depth: 1
+  norm_layer: identity
+graph_arch:
+  learn_influence: False
+  learn_influence_via_hypernetwork: False
+  hypernet_layer_sizes: [0]
+  if_somophormer_attention_bias: False
+
+# Sequence lengths (frames at 60 fps; datasets at other fps are resampled)
+obs_length: 30
+prediction_horizon: 120
+prediction_horizon_train: ${model.prediction_horizon}
+prediction_horizon_eval: ${model.prediction_horizon}
+pred_length: ${model.prediction_horizon_eval}
+
+# Training
+batch_size: 64
+batch_size_eval: 64
+num_epochs: 800
+num_iter_perepoch: 580        # an epoch is a fixed number of iterations, not a full pass over the data
+num_workers: 4
+seed: 52345
+dtype: float32
+lr: 5.e-4
+use_lr_scheduler: True
+lr_scheduler_kwargs:
+  lr_scheduler_type: ExponentialLRSchedulerWarmup
+  warmup_duration: 20
+  if_lr_scheduler_ramp_up: False
+  ramp_up_init_lr: 0.0
+  min_lr: 1.e-4
+  scheduler_name: ExponentialLR
+  update_every: 1
+  gamma_decay: 0.98
+  cosannealing_cycle_length: 150
+
+# Multi-dataset sampling and permutation augmentation
+dataset_sampling_style: proportional   # sample datasets proportionally to their size
+permutation_prob: 0.5                  # probability of the random graph permutation/augmentation of a sample
+if_root_perm: True                     # the root node is permuted as well
+
+# Validation
+if_run_validation: False
+eval_frequency: 50
+num_iteration_eval: 10

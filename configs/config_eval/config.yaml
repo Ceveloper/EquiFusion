@@ -1,0 +1,60 @@
+hydra:
+  output_subdir: null  
+  run:  
+    dir: .  
+  job:
+    chdir: False
+
+dataset_main_path: ./datasets
+dataset_annotation_path: ${dataset_main_path}/annotations
+dataset_precomputed_path: ${dataset_main_path}/processed
+checkpoint_path: ''
+
+defaults:
+  - _self_
+  - task: hmp
+  - method_specs: equifusion
+  - dataset: amass
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled  
+
+method_name: ${method_specs.method_name}
+dtype: float32
+dataset_name: ${dataset.dataset_name}
+
+
+# The released models predict 0.5 s -> 2 s at 60 fps (30 -> 120 frames). Datasets recorded at another frame rate are
+# resampled to these windows (set per dataset, e.g. H36M at 50 fps: if_eval_from60_at50fps: True).
+if_eval_from60_at50fps: ${oc.select:dataset.if_eval_from60_at50fps,False}
+if_eval_from60_at30fps: False
+if_eval_from60_at20fps: False
+
+stats_mode: deterministic #probabilistic, deterministic
+# consider_sampling_noise: False
+batch_size:  512 
+metrics_at_cpu: False
+n_gpu: 1
+num_samples: 50 
+if_measure_time: False
+
+seed: 0
+dataset_split: test
+silent: False
+
+obs_length: ${eval:'int(${task.history_sec} * (60 if ${if_eval_from60_at50fps} else ${dataset.fps}))'}
+pred_length: ${eval:'int(${task.prediction_horizon_sec} * (60 if ${if_eval_from60_at50fps} else ${dataset.fps}))'}
+
+if_store_output: False
+store_output_path: ./final_predictions_storage/${task.task_name}/${method_specs.method_name}/${dataset.dataset_name}/
+if_store_gt: False 
+store_gt_path: ./final_predictions_storage/${task.task_name}/GT/${dataset.dataset_name}/
+
+# APDE needs annotations/<dataset>/mmapd_GT.csv (AMASS, H36M); FID needs the H36M action classifier
+if_compute_apde: ${eval:"'${dataset.dataset_name}' in ['amass', 'h36m']"}
+
+if_compute_fid: ${eval:"'${dataset.dataset_name}' == 'h36m'"}
+if_compute_cmd: True
+# evaluation with a random permutation of the graph nodes of each test sample (paper, Tab. 4):
+# none | input (observation and adjacency; independent diffusion noise) | input_and_noise (the noise is permuted too)
+random_permutation: none
+

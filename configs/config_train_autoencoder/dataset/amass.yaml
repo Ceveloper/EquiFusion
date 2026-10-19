@@ -1,0 +1,56 @@
+amass:
+    num_joints: 22 #included hip even if if_consider_hip=False
+    fps: 60
+
+    multimodal_threshold: 0.4
+    dataset_type: AMASSDataset
+    dataset_name: amass
+    precomputed_folder: "${dataset_precomputed_path}/AMASS/${task.task_name}/"
+    annotations_folder: "${dataset_annotation_path}/AMASS/${task.task_name}/"
+
+    # Accordingly, the training set
+    # contains the ACCAD, BMLhandball, BMLmovi, BMLrub,
+    # CMU, EKUT, EyesJapanDataset, KIT, PosePrior, TCD-
+    # Hands, and TotalCapture datasets, and the validation set
+    # contains the HumanEva, HDM05, SFU, and MoSh datasets.
+    # The remaining datasets are all part of the test set: DFaust,
+    # DanceDB, GRAB, HUMAN4D, SOMA, SSM, and Transi-
+    # tions.
+
+    data_loader_train:
+        stride: 60
+        augmentation: 30
+        shuffle: True
+        datasets: ['ACCAD', "BMLhandball", "BMLmovi", "BMLrub", 'EKUT', 'CMU', 'EyesJapanDataset', 'KIT', "PosePrior", 'TCDHands', 'TotalCapture'] # from paper
+                    # "EyesJapanDataset",
+                    # ,
+                    # "HDM05",
+                    # "MoSh"
+        da_mirroring: 0.5
+        da_rotations: 1.0
+        drop_last: True
+        if_load_mmgt: False
+        if_permute_keypoints: True
+
+
+    data_loader_train_eval:
+        stride: 30
+        augmentation: 0
+        shuffle: False
+        datasets: ['ACCAD', "BMLhandball", "BMLmovi", "BMLrub", 'EKUT', 'CMU', 'EyesJapanDataset', 'KIT', "PosePrior", 'TCDHands', 'TotalCapture'] # from paper
+        # datasets: ['ACCAD', "BMLhandball", "BMLmovi",  'CMU', 'KIT', 'TotalCapture'] # decrease evaluatio time
+        da_mirroring: 0.
+        da_rotations: 0.
+        drop_last: False
+        if_load_mmgt: False
+        if_permute_keypoints: False
+
+    data_loader_valid:
+        stride: 30
+        augmentation: 0
+        shuffle: False
+        datasets: ['HumanEva', 'HDM05', 'SFU', 'MoSh'] # from paper
+        file_idces: "all"
+        drop_last: False
+        if_load_mmgt: False
+        if_permute_keypoints: False
