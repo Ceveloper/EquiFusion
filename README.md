@@ -1,7 +1,7 @@
 # EquiFusion - Kinematics-Agnostic Human Motion Prediction via Equivariant Latent Diffusion (ECCV 2026)
 **[Website](https://ceveloper.github.io/publications/equifusion/)** |
 **[Paper](https://arxiv.org/abs/2607.10984)** |
-**Demo** (coming soon) |
+**[Demo](https://huggingface.co/spaces/ceccurr/EquiFusion)** |
 **[Models](https://huggingface.co/EquiFusion)**
 
 This is the official repository for the ECCV 2026 paper
@@ -20,7 +20,7 @@ Authors:
 </p>
 
 ### Examples
-The same model (`cross_kinematics/amass_nymeria`, which will be released in a few days) on different skeletons: the prediction closest to the ground truth, then diverse predictions.
+The same model EquiFusion A+N (`cross_kinematics/amass_nymeria`) on different skeletons: the prediction closest to the ground truth, then diverse predictions.
 
 | | Closest to GT | Diverse 1 | Diverse 2 |
 |---|---|---|---|
@@ -76,7 +76,7 @@ of the observed skeleton are kept by construction.
 
 ## Demo
 
-A live demo on Hugging Face Spaces will be released in a few days, together with the models trained on Nymeria.
+A live demo runs on [Hugging Face Spaces](https://huggingface.co/spaces/ceccurr/EquiFusion). Try out EquiFusion to predict 50 futures in a fraction of a second for sequences of AMASS, Nymeria, MoYo and Human3.6M or for an uploaded observation, also with missing limbs or joints.
 
 ## Installation
 
@@ -92,19 +92,19 @@ The environment pins the versions used to train and evaluate the released models
 All models are released on Hugging Face in the [EquiFusion organization](https://huggingface.co/EquiFusion) and can be downloaded in Python:
 ```python
 from src.inference_utils import download_equifusion
-checkpoint = download_equifusion("EquiFusion/equifusion-cross-kinematics-amass")
+checkpoint = download_equifusion("EquiFusion/equifusion-cross-kinematics-amass-nymeria")
 ```
 or placed manually in `./trained_models/<name>/`. Each model folder contains the latent diffusion model (`config.yaml`,
 `checkpoints/checkpoint_375.safetensors`) and its autoencoder (`autoencoder/`).
 
 | Name | Hugging Face | Training data | Representation | Use |
 |---|---|---|---|---|
-| `cross_kinematics/amass_nymeria` | coming soon | AMASS + Nymeria | bone directions | main model; zero-shot on other skeletons (H36M, MoYo) |
-| `cross_kinematics/amass_nymeria_h36m` | coming soon | AMASS + Nymeria + H36M | bone directions | trained on three datasets |
+| `cross_kinematics/amass_nymeria` | [`EquiFusion/equifusion-cross-kinematics-amass-nymeria`](https://huggingface.co/EquiFusion/equifusion-cross-kinematics-amass-nymeria) | AMASS + Nymeria | bone directions | main model; zero-shot on other skeletons (H36M, MoYo) |
+| `cross_kinematics/amass_nymeria_h36m` | [`EquiFusion/equifusion-cross-kinematics-amass-nymeria-h36m`](https://huggingface.co/EquiFusion/equifusion-cross-kinematics-amass-nymeria-h36m) | AMASS + Nymeria + H36M | bone directions | trained on three datasets |
 | `cross_kinematics/amass` | [`EquiFusion/equifusion-cross-kinematics-amass`](https://huggingface.co/EquiFusion/equifusion-cross-kinematics-amass) | AMASS | bone directions | zero-shot on unseen skeletons (cross-topology) |
-| `cross_kinematics/amass_nymeria_3d` | coming soon | AMASS + Nymeria | 3D joints ("Ours (M)") | main model, arbitrary missing joints |
+| `cross_kinematics/amass_nymeria_3d` | [`EquiFusion/equifusion-cross-kinematics-amass-nymeria-3d`](https://huggingface.co/EquiFusion/equifusion-cross-kinematics-amass-nymeria-3d) | AMASS + Nymeria | 3D joints ("Ours (M)") | main model, arbitrary missing joints |
 | `in_domain/amass` | [`EquiFusion/equifusion-in-domain-amass`](https://huggingface.co/EquiFusion/equifusion-in-domain-amass) | AMASS | bone directions | same-dataset evaluation |
-| `in_domain/nymeria` | coming soon | Nymeria | bone directions | same-dataset evaluation |
+| `in_domain/nymeria` | [`EquiFusion/equifusion-in-domain-nymeria`](https://huggingface.co/EquiFusion/equifusion-in-domain-nymeria) | Nymeria | bone directions | same-dataset evaluation |
 | `in_domain/h36m` | [`EquiFusion/equifusion-in-domain-h36m`](https://huggingface.co/EquiFusion/equifusion-in-domain-h36m) | H36M | bone directions | same-dataset evaluation |
 
 ## Datasets
@@ -112,7 +112,7 @@ or placed manually in `./trained_models/<name>/`. Each model folder contains the
 The main EquiFusion model is trained on **AMASS** and **Nymeria**, and is evaluated also zero-shot on **Human3.6M (H36M)** and **MoYo**. As shown in the table above, we also provide code and trained weights for other versions of EquiFusion, trained for example on single-dataset as conventional SHMP approaches (e.g. AMASS only), or with a different motion parametrization (3D joints vs our bone directions).
 You only need the datasets you want to train or evaluate on.
 
-The small annotation files (test/validation segments, multimodal-APD ground truth, CMD reference values) are part of this repository in `datasets/annotations/`
+The small annotation files (test/validation segments, multimodal-APD ground truth, CMD reference values, Nymeria splits) are part of this repository in `datasets/annotations/`
 (the AMASS and H36M segments are the same as in [SkeletonDiffusion](https://github.com/Ceveloper/SkeletonDiffusion)).
 Download the raw data from the original sources (their licenses apply) to `datasets/raw/`; the scripts in `src/data/` convert it to `datasets/processed/`,
 which is what training and evaluation read.
@@ -122,6 +122,7 @@ datasets
 ├── annotations      # in the repository
 │   ├── AMASS/hmp/        segments_test.csv, mmapd_GT.csv, mean_motion_test.txt
 │   ├── Human36M/hmp/     segments_test.csv, segments_valid.csv, mmapd_GT.csv, mean_motion_test.txt
+│   ├── Nymeria/hmp/      train.txt, valid.txt, test.txt, segments_test.csv, mean_motion_test.txt
 │   └── MOYO/hmp/         segments_test_zero_shot.csv, mean_motion_test.txt
 ├── raw              # downloaded by you
 └── processed        # created by the scripts below
@@ -165,7 +166,41 @@ wget -P datasets/processed/Human36M/hmp https://github.com/BarqueroGerman/BeLFus
 
 ### [Nymeria](https://www.projectaria.com/datasets/nymeria/)
 
-EquiFusion is the first work to use Nymeria for human motion prediction. The Nymeria data pipeline (pre-processing script, splits and test segments) will be released in a few days.
+EquiFusion is the first work to adapt Nymeria to the task of human motion prediction. We applied the following pre-processing of the raw data, particularly as we found the data to be less dynamic compared to AMASS.
+Request access and download the **body motion** archives (`Nymeria_v0.0_<sequence>_body_motion.zip`) of the 1094 sequences listed in
+`datasets/annotations/Nymeria/hmp/{train,valid,test}.txt`. Unzip each to `datasets/raw/Nymeria/<sequence>/body_motion_unzipped/`,
+so that `datasets/raw/Nymeria/<sequence>/body_motion_unzipped/body/xdata.npz` exists. Then run
+```bash
+python -m src.data.create_nymeria_dataset
+```
+(about 12 minutes on CPU, 80 GB RAM). For each sequence (XSens motion capture, 23 joints, 240 fps) the script
+1. subsamples to 60 fps;
+2. trims the static start and end: frames are dropped until a joint has moved more than 4 cm from its position in the first (last) frame;
+3. selects the frame windows used for training and testing (`select_motion_windows` in [src/data/create_nymeria_dataset.py](src/data/create_nymeria_dataset.py));
+   windows shorter than 150 frames (0.5 s observation + 2 s prediction) are discarded;
+4. stores sequences with several windows as `<sequence>_<i>`.
+
+The result, `datasets/processed/Nymeria/hmp/data_3d_nymeria.npz` (10.1M of 62M frames at 60 fps: 9.36M train, 0.38M validation, 0.38M test), stores the sequences in alphabetical order for training and testing;
+`data_3d_nymeria_idxs.json` lists the kept frame windows of each sequence.
+The test set consists of the 12336 segments of `datasets/annotations/Nymeria/hmp/segments_test.csv` (0.5 s observation, 2 s prediction, having segments with non-overlapping input past as in previous works i.e. a new segment every 0.5 s).
+
+**Pruning static data.** Nymeria consists of long recordings of daily activities. A large part of these recordings shows static motions i.e. the subject is not moving. Removing these static motions leaves us with a total of 211 hours training data, considerably larger than existing datasets.
+However, in our experiments, training on these 211 h did not change the overall performance and evaluation metrics on Nymeria itself and on zero-shot tasks. Hence, our paper and the released models use a subset of the full dataset, about the same size as the AMASS training set
+(43 h, AMASS: 40 h). After this further pruning step, the velocity distribution of the motions in our Nymeria version is closer to the distribution of AMASS. The full Nymeria set of 211 h contains a larger number of slow motions:
+
+<p align="center">
+  <img src="./figures/nymeria_velocity.png" alt="Velocity distribution of motion sequences in AMASS and Nymeria" width="600"/>
+</p>
+
+The results in our paper are obtained with the pruned and balanced subset of Nymeria. If you are interested in the full version of Nymeria, you can create it with
+```bash
+python -m src.data.create_nymeria_dataset --full
+```
+which writes it to `datasets/processed/Nymeria_full/hmp/` and its test segments (a new segment every 2.5 s) to `datasets/annotations/Nymeria_full/hmp/`.
+To use it, override the dataset folders: for training `dataset.nymeria.precomputed_folder=./datasets/processed/Nymeria_full/hmp/` (the diffusion model takes the
+datasets of its autoencoder), for evaluation `dataset.precomputed_folder=./datasets/processed/Nymeria_full/hmp/ dataset.annotations_folder=./datasets/annotations/Nymeria_full/hmp`.
+
+Nymeria has no multimodal ground truth and is evaluated with `stats_mode=deterministic`.
 
 ### [MoYo](https://moyo.is.tue.mpg.de/) (zero-shot evaluation)
 
@@ -178,24 +213,27 @@ which creates `data_3d_moyo.npz` and `mmgt_test.txt` in `datasets/processed/MOYO
 
 ## Inference
 
-See [Inference Example (AMASS model).ipynb](Inference%20Example%20%28AMASS%20model%29.ipynb) (prediction, ranking of the samples, visualization, and the same model applied to a different skeleton)
-and [Missing Limbs (AMASS model).ipynb](Missing%20Limbs%20%28AMASS%20model%29.ipynb) (prediction from partial observations and generation of missing limbs).
+See [Inference Example (A+N model).ipynb](Inference%20Example%20%28A%2BN%20model%29.ipynb) (prediction, ranking of the samples, visualization, and the same model applied zero-shot to an unseen skeleton)
+and [Missing Limbs (A+N model).ipynb](Missing%20Limbs%20%28A%2BN%20model%29.ipynb) (prediction from partial observations and generation of missing limbs).
+The same notebooks with the model trained on AMASS only: [Inference Example (AMASS model).ipynb](Inference%20Example%20%28AMASS%20model%29.ipynb), [Missing Limbs (AMASS model).ipynb](Missing%20Limbs%20%28AMASS%20model%29.ipynb).
 In short:
 ```python
 from src.inference_utils import load_equifusion, predict
-model, skeleton, config = load_equifusion("./trained_models/cross_kinematics/amass/checkpoints/checkpoint_375.safetensors", dataset_name="amass")
+model, skeleton, config = load_equifusion("./trained_models/cross_kinematics/amass_nymeria/checkpoints/checkpoint_375.safetensors", dataset_name="amass")
 pred = predict(model, skeleton, config, obs, num_samples=50)   # obs: [T_obs, J, 3] joint positions in meters
 ```
-`dataset_name` selects the dataset and skeleton (kinematic tree) of the input: the EquiFusion model in the example can be used for `amass`, `h36m` or `moyo`.
+`dataset_name` selects the dataset and skeleton (kinematic tree) of the input: the main EquiFusion model in the example can be used for `amass`, `nymeria`, `h36m` or `moyo`.
 
 ## Evaluation
 
 ```bash
-python eval.py checkpoint_path=./trained_models/cross_kinematics/amass/checkpoints/checkpoint_375.safetensors dataset=amass stats_mode=probabilistic
-python eval.py checkpoint_path=./trained_models/cross_kinematics/amass/checkpoints/checkpoint_375.safetensors dataset=h36m stats_mode=probabilistic   # zero-shot on a different skeleton
-python eval.py checkpoint_path=./trained_models/cross_kinematics/amass/checkpoints/checkpoint_375.safetensors dataset=moyo stats_mode=probabilistic
+python eval.py checkpoint_path=./trained_models/cross_kinematics/amass_nymeria/checkpoints/checkpoint_375.safetensors dataset=amass stats_mode=probabilistic
+python eval.py checkpoint_path=./trained_models/cross_kinematics/amass_nymeria/checkpoints/checkpoint_375.safetensors dataset=h36m stats_mode=probabilistic   # zero-shot on a different skeleton
+python eval.py checkpoint_path=./trained_models/cross_kinematics/amass_nymeria/checkpoints/checkpoint_375.safetensors dataset=nymeria stats_mode=deterministic
+python eval.py checkpoint_path=./trained_models/cross_kinematics/amass_nymeria/checkpoints/checkpoint_375.safetensors dataset=moyo stats_mode=probabilistic
 ```
 - `stats_mode=probabilistic` computes all metrics including the multimodal ones (MMADE, MMFDE); `deterministic` is faster.
+  Nymeria has no multimodal ground truth and is evaluated with `stats_mode=deterministic`.
 - Dataset-specific settings are defaults of `configs/config_eval/dataset/*.yaml`: H36M (50 fps) is resampled to the 60-fps windows of the models (0.5 s -> 2 s),
   APDE is computed for AMASS and H36M, FID for H36M.
 - Results are written next to the checkpoint (`eval_<dataset>_<batch_size>/...`). `batch_size` (default 512) affects the random samples: keep it fixed when comparing.
@@ -204,25 +242,39 @@ python eval.py checkpoint_path=./trained_models/cross_kinematics/amass/checkpoin
 ## Training
 
 Training has two stages: the equivariant autoencoder, then the equivariant latent diffusion model on the learned equivariant latent space. The datasets, the motion representation
-and the permutation probability of the diffusion model are taken from the hydra config of its autoencoder. The commands below reproduce the released models (the commands for the models trained on Nymeria follow with the Nymeria release). Without `output_log_path`, a run is written to
+and the permutation probability of the diffusion model are taken from the hydra config of its autoencoder. The commands below reproduce the released models. Without `output_log_path`, a run is written to
 `./output/hmp/<datasets>/{autoencoder,diffusion}/<date>_<time>_<info>/`; the commands set the folder explicitly, so that the diffusion model can refer to its autoencoder.
 ```bash
+# cross_kinematics/amass_nymeria (main model): AMASS + Nymeria, bone directions
+python train_autoencoder.py output_log_path=./output/amass_nymeria/autoencoder
+python train_diffusion.py model.pretrained_autoencoder_path=./output/amass_nymeria/autoencoder/checkpoints/checkpoint_800.pt output_log_path=./output/amass_nymeria/diffusion
+
+# cross_kinematics/amass_nymeria_h36m: AMASS + Nymeria + H36M
+python train_autoencoder.py 'dataset=[amass,nymeria,h36m]' output_log_path=./output/amass_nymeria_h36m/autoencoder
+python train_diffusion.py model.pretrained_autoencoder_path=./output/amass_nymeria_h36m/autoencoder/checkpoints/checkpoint_800.pt output_log_path=./output/amass_nymeria_h36m/diffusion
+
 # cross_kinematics/amass: AMASS
 python train_autoencoder.py 'dataset=[amass]' output_log_path=./output/amass/autoencoder
 python train_diffusion.py model.pretrained_autoencoder_path=./output/amass/autoencoder/checkpoints/checkpoint_800.pt output_log_path=./output/amass/diffusion
 
+# cross_kinematics/amass_nymeria_3d: AMASS + Nymeria, 3D joint positions
+python train_autoencoder.py task.motion_repr_type=SkeletonRescalePose model.num_epochs=300 output_log_path=./output/amass_nymeria_3d/autoencoder
+python train_diffusion.py model.pretrained_autoencoder_path=./output/amass_nymeria_3d/autoencoder/checkpoints/checkpoint_300.pt output_log_path=./output/amass_nymeria_3d/diffusion
+
 # in_domain/amass: AMASS, no node permutation in the diffusion training (same autoencoder as cross_kinematics/amass)
 python train_diffusion.py model.pretrained_autoencoder_path=./output/amass/autoencoder/checkpoints/checkpoint_800.pt +permutation_prob=0.0 output_log_path=./output/amass/diffusion_in_domain
 
-# in_domain/h36m: H36M, no node permutation in the diffusion training
+# in_domain/nymeria and in_domain/h36m: one dataset, no node permutation in the diffusion training
+python train_autoencoder.py 'dataset=[nymeria]' output_log_path=./output/nymeria/autoencoder
+python train_diffusion.py model.pretrained_autoencoder_path=./output/nymeria/autoencoder/checkpoints/checkpoint_800.pt +permutation_prob=0.0 output_log_path=./output/nymeria/diffusion
 python train_autoencoder.py 'dataset=[h36m]' output_log_path=./output/h36m/autoencoder
 python train_diffusion.py model.pretrained_autoencoder_path=./output/h36m/autoencoder/checkpoints/checkpoint_800.pt +permutation_prob=0.0 output_log_path=./output/h36m/diffusion
 ```
 The diffusion model is trained for 375 epochs; its final checkpoint `checkpoint_375.pt` corresponds to the released weights (only the latest checkpoint is kept).
 Each run folder contains its config, checkpoints and TensorBoard logs. An interrupted run continues from its latest checkpoint (including optimizer, EMA and
-random states), e.g. for the diffusion model of `cross_kinematics/amass`:
+random states), e.g. for the diffusion model of the main model:
 ```bash
-python train_diffusion.py --config-path=./output/amass/diffusion --config-name=config if_resume_training=True
+python train_diffusion.py --config-path=./output/amass_nymeria/diffusion --config-name=config if_resume_training=True
 ```
 (the same for the autoencoder, with `train_autoencoder.py` and its run folder).
 
@@ -242,8 +294,8 @@ predictions deviates by more than `+tolerance` (default 1e-4).
 **Equivariance on a distribution level or under stochastic sampling.** Logically, if the diffusion inference noise is not permuted together with the input and the adjacency matrix but sampled independently, the corresponding predictions cannot satisfy equivariance: the noise of the reverse process determines the generated futures. So for a generative model and for noise sampled independently of a permuted input, the predictions are not equal sample by sample: equivariance holds not for single samples but for the whole output distribution. Thus generative approaches for iid noise can only be equivariant on a distribution level. This is tested by
 applying a random permutation to the input motion and adjacency matrix but not the noise (`random_permutation=input`):
 ```bash
-python eval.py checkpoint_path=./trained_models/cross_kinematics/amass/checkpoints/checkpoint_375.safetensors dataset=amass stats_mode=probabilistic
-python eval.py checkpoint_path=./trained_models/cross_kinematics/amass/checkpoints/checkpoint_375.safetensors dataset=amass stats_mode=probabilistic random_permutation=input
+python eval.py checkpoint_path=./trained_models/cross_kinematics/amass_nymeria/checkpoints/checkpoint_375.safetensors dataset=amass stats_mode=probabilistic
+python eval.py checkpoint_path=./trained_models/cross_kinematics/amass_nymeria/checkpoints/checkpoint_375.safetensors dataset=amass stats_mode=probabilistic random_permutation=input
 ```
 With independent noise the metrics differ by between 0.2% and 1%;
 with `random_permutation=input_and_noise` (noise permuted as well) they are identical. The paper reports this comparison
