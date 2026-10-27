@@ -109,7 +109,7 @@ or placed manually in `./trained_models/<name>/`. Each model folder contains the
 
 ## Datasets
 
-The main EquiFusion model is trained on **AMASS** and **Nymeria**, and is evaluated also zero-shot on **Human3.6M (H36M)** and **MoYo**. As shown in the table above, we also provide code and trained weights for other versions of EquiFusion, trained for example on single-dataset as conventional SHMP approaches (e.g. AMASS only), or with a different motion parametrization (3D joints vs our bone directions).
+The main EquiFusion model is trained on **[AMASS](https://amass.is.tue.mpg.de/)** and **[Nymeria](https://www.projectaria.com/datasets/nymeria/)**, and is evaluated also zero-shot on **[Human3.6M (H36M)](http://vision.imar.ro/human3.6m/description.php)** and **[MoYo](https://moyo.is.tue.mpg.de/)**. As shown in the table above, we also provide code and trained weights for other versions of EquiFusion, trained for example on single-dataset as conventional SHMP approaches (e.g. AMASS only), or with a different motion parametrization (3D joints vs our bone directions).
 You only need the datasets you want to train or evaluate on.
 
 The small annotation files (test/validation segments, multimodal-APD ground truth, CMD reference values, Nymeria splits) are part of this repository in `datasets/annotations/`
@@ -135,18 +135,18 @@ Normalization statistics (`processed/<Dataset>/hmp/statistics/`) are computed au
 
 ### [AMASS](https://amass.is.tue.mpg.de/)
 
-We follow the pipeline of [BeLFusion](https://github.com/BarqueroGerman/BeLFusion) (as SkeletonDiffusion).
+We follow the pipeline of [SkeletonDiffusion](https://github.com/Ceveloper/SkeletonDiffusion).
 1. Download the *SMPL+H G* archives of the 22 datasets ACCAD, BMLhandball, BMLmovi, BMLrub, CMU, DanceDB, DFaust, EKUT, EyesJapanDataset, GRAB, HDM05, HUMAN4D,
    HumanEva, KIT, MoSh, PosePrior, SFU, SOMA, SSM, TCDHands, TotalCapture, Transitions. Put the `.tar.bz2` files, named as in this list
    (e.g. `PosePrior.tar.bz2`), in `datasets/raw/AMASS/` without extracting them.
-2. Download the *Extended SMPL+H model* from [MANO](https://mano.is.tue.mpg.de/) and put the `smplh` folder (`male/model.npz`, `female/model.npz`) in `datasets/annotations/AMASS/bodymodels/`.
+2. AMASS stores body model parameters; the script converts them to joint positions with the SMPL+H body model. Download the *Extended SMPL+H model* (the body model only, from the [MANO website](https://mano.is.tue.mpg.de/)) and put the `smplh` folder (`male/model.npz`, `female/model.npz`) in `datasets/annotations/AMASS/bodymodels/`.
 3. Run
 ```bash
 python -m src.data.create_amass_dataset --gpu --if_extract_zip
 ```
 This extracts the archives (to `datasets/annotations/AMASS/dataset/`, drop `--if_extract_zip` when rerunning) and creates `data_3d_amass.npz` and the multimodal ground truth
 `mmgt_test.txt` in `datasets/processed/AMASS/hmp/` (about 1 hour on CPU, 5-15 minutes on GPU).
-Split as in BeLFusion: training on ACCAD, BMLhandball, BMLmovi, BMLrub, CMU, EKUT, EyesJapanDataset, KIT, PosePrior, TCDHands, TotalCapture;
+Split as in SkeletonDiffusion: training on ACCAD, BMLhandball, BMLmovi, BMLrub, CMU, EKUT, EyesJapanDataset, KIT, PosePrior, TCDHands, TotalCapture;
 validation on HumanEva, HDM05, SFU, MoSh; test on DFaust, DanceDB, GRAB, HUMAN4D, SOMA, SSM, Transitions.
 
 ### [Human3.6M](http://vision.imar.ro/human3.6m/description.php)
